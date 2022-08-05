@@ -10,29 +10,21 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-public class Account {
+public class AccountUser {
     @Id
     @GeneratedValue
     private Long id;
-
-    @ManyToOne
-    private AccountUser accountUser;
-    private String accountNumber;
-
-    @Enumerated(EnumType.STRING)
-    private AccountStatus accountStatus;
-    private Long balance;
-
-    private LocalDateTime registeredAt;
-    private LocalDateTime unRegisteredAt;
+    private String name;
 
     @CreatedDate
     private LocalDateTime createdAt;
     @LastModifiedDate
     private LocalDateTime updatedAt;
+
+
 }
