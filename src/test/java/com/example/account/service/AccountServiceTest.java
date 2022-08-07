@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static com.example.account.type.ErrorCode.ACCOUNT_ALREADY_UNREGISTERED;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.*;
@@ -43,8 +44,8 @@ class AccountServiceTest {
     void createAccountSuccess() {
         //given
         AccountUser user = AccountUser.builder()
-                .id(12L)
                 .name("Pobi").build();
+        user.setId(12L);
         given(accountUserRepository.findById(anyLong()))
                 .willReturn(Optional.of(user));
         given(accountRepository.findFirstByOrderByIdDesc())
@@ -125,8 +126,7 @@ class AccountServiceTest {
                 () -> accountService.createAccount(1L, 1000L));
 
         //then
-        assertEquals(ErrorCode.MAX_ACCOUNT_PER_USER_10, exception
-                .getErrorCode());
+        assertEquals(ErrorCode.MAX_ACCOUNT_PER_USER_10, exception.getErrorCode());
     }
 
     @Test
@@ -134,8 +134,8 @@ class AccountServiceTest {
     void deleteAccountSuccess() {
         //given
         AccountUser user = AccountUser.builder()
-                .id(12L)
                 .name("Pobi").build();
+        user.setId(12L);
         given(accountUserRepository.findById(anyLong()))
                 .willReturn(Optional.of(user));
         given(accountRepository.findByAccountNumber(anyString()))
@@ -152,8 +152,7 @@ class AccountServiceTest {
         verify(accountRepository, times(1)).save(captor.capture());
         assertEquals(12L, accountDto.getUserId());
         assertEquals("1000000012", captor.getValue().getAccountNumber());
-        assertEquals(AccountStatus.UNREGISTERED,
-                captor.getValue().getAccountStatus());
+        assertEquals(AccountStatus.UNREGISTERED, captor.getValue().getAccountStatus());
     }
 
     @Test
@@ -195,13 +194,11 @@ class AccountServiceTest {
     void deleteAccountFailed_userUnMatch() {
         //given
         AccountUser pobi = AccountUser.builder()
-                .id(12L)
                 .name("Pobi").build();
-
+        pobi.setId(12L);
         AccountUser harry = AccountUser.builder()
-                .id(13L)
                 .name("Harry").build();
-
+        harry.setId(13L);
         given(accountUserRepository.findById(anyLong()))
                 .willReturn(Optional.of(pobi));
         given(accountRepository.findByAccountNumber(anyString()))
@@ -223,8 +220,8 @@ class AccountServiceTest {
     void deleteAccountFailed_balanceNotEmpty() {
         //given
         AccountUser pobi = AccountUser.builder()
-                .id(12L)
                 .name("Pobi").build();
+        pobi.setId(12L);
         given(accountUserRepository.findById(anyLong()))
                 .willReturn(Optional.of(pobi));
         given(accountRepository.findByAccountNumber(anyString()))
@@ -246,8 +243,8 @@ class AccountServiceTest {
     void deleteAccountFailed_alreadyUnregistered() {
         //given
         AccountUser pobi = AccountUser.builder()
-                .id(12L)
                 .name("Pobi").build();
+        pobi.setId(12L);
         given(accountUserRepository.findById(anyLong()))
                 .willReturn(Optional.of(pobi));
         given(accountRepository.findByAccountNumber(anyString()))
@@ -262,8 +259,7 @@ class AccountServiceTest {
                 () -> accountService.deleteAccount(1L, "1234567890"));
 
         //then
-        assertEquals(ErrorCode.ACCOUNT_ALREADY_UNREGISTERED,
-                exception.getErrorCode());
+        assertEquals(ACCOUNT_ALREADY_UNREGISTERED, exception.getErrorCode());
     }
 
     @Test
@@ -271,8 +267,8 @@ class AccountServiceTest {
     void successGetAccountsByUserId() {
         //given
         AccountUser pobi = AccountUser.builder()
-                .id(12L)
                 .name("Pobi").build();
+        pobi.setId(12L);
         List<Account> accounts = Arrays.asList(
                 Account.builder()
                         .accountUser(pobi)

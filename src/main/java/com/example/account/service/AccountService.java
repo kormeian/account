@@ -35,8 +35,7 @@ public class AccountService {
      */
     @Transactional
     public AccountDto createAccount(Long userId, Long initialBalance) {
-        AccountUser accountUser = accountUserRepository.findById(userId)
-                .orElseThrow(() -> new AccountException(USER_NOT_FOUND));
+        AccountUser accountUser = getAccountUser(userId);
 
         validateCreateAccount(accountUser);
 
